@@ -18,6 +18,8 @@ const enum playerDirection { stop=0, up, down };
 playerDirection leftDir;
 playerDirection rightDir;
 
+const enum yDirection { yUp=0, yDown};
+yDirection yDir;
 char prevHitPlayer = NULL;
 std::string playerScored = " ";
 
@@ -30,12 +32,13 @@ int main()
         logic();
         draw();
         // The amount just really depends on ur fps so u might have to change this. maybe i will add deltatime but im not sure how to do that since im working with whole numbers in the console
-        Sleep(20);
+        Sleep(25);
     }
 }
 
 void setup()
 {
+    yDir = yDown;
     ballX = 18;
     ballY = 8;
     gameOver = false;
@@ -80,11 +83,11 @@ void logic()
     // If the ball hits the bounds, reverse the Y axis
     if (ballY == 14)
     {
-        ballY--;
+        yDir = yUp;
     }
     if (ballY == 1)
     {
-        ballY++;
+        yDir = yDown;
     }
 
     if (prevHitPlayer == 'a' || prevHitPlayer == NULL)
@@ -94,6 +97,20 @@ void logic()
     if (prevHitPlayer == 'b')
     {
         ballX--;
+    }
+
+    switch (yDir)
+    {
+    case yUp:
+    {
+        ballY--;
+        break;
+    }
+
+    case yDown:
+    {
+        ballY++;
+    }
     }
 
     if (rightDir == down)
@@ -147,13 +164,9 @@ void draw()
         for (int j = 0; j < width; j++)
         {
             // Draw the bounds
-            if (i == 0)
+            if (i == 0 || i == 15)
             {
-                std::cout << "#";
-            }
-            else if (i == 15)
-            {
-                std::cout << "#";
+                std::cout << "-";
             }
             // Draw the left player
             else if ((j == leftX && i == leftY) || (j == leftX && i == leftY + 1) || (j == leftX && i == leftY - 1))
